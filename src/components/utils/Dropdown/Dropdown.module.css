@@ -1,0 +1,9 @@
+.expandMenu {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  margin: auto 2rem auto 0.5rem;
+}
