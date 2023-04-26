@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import FormDropdownItemModel from "../../../types/form/formDropdownItem";
+import FormDropdownItemModel from "../../../../types/form/formDropdownItem";
 import styles from "../Dropdown/Dropdown.module.css";
 import { UseFormRegister } from "react-hook-form";
-import { ColorType } from "../../../types/colorType";
-import FormDropdownItem from "../../../types/form/formDropdownItem";
+import { ColorType } from "../../../../types/colorType";
+import FormDropdownItem from "../../../../types/form/formDropdownItem";
 
 interface Props {
   name: string;

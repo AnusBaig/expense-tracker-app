@@ -1,8 +1,8 @@
 import React, { ReactNode, useState } from "react";
-import { ButtonClasses } from "../../../enums/buttonClasses";
+import { ButtonClasses } from "../../../../enums/buttonClasses";
 import { Modal } from "react-bootstrap";
 import "../Button/Button.module.css";
-import { ColorType } from "../../../types/colorType";
+import { ColorType } from "../../../../types/colorType";
 
 interface Props {
   text: string;
