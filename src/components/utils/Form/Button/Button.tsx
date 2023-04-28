@@ -3,13 +3,16 @@ import { ButtonClasses } from "../../../../enums/buttonClasses";
 import { Modal } from "react-bootstrap";
 import "../Button/Button.module.css";
 import { ColorType } from "../../../../types/colorType";
+import { Size } from "../../../../types/size";
 
 interface Props {
   text: string;
   color?: ColorType;
+  size?: Size;
   containsOutline?: boolean;
   disable?: boolean;
   isSubmit?: boolean;
+  noSpacing?: boolean;
   children?: ReactNode;
   onClick?: () => void;
 }
@@ -17,15 +20,19 @@ interface Props {
 const Button = ({
   text,
   color,
+  size,
   containsOutline,
   disable,
   children,
   isSubmit,
+  noSpacing,
   onClick,
 }: Props) => {
   const buttonClass = `${ButtonClasses.baseClass} ${ButtonClasses.baseClass}${
     containsOutline ? "-outline" : ""
-  }-${color ?? ButtonClasses.defaultColor}`;
+  }-${color ?? ButtonClasses.defaultColor} ${
+    size && `${ButtonClasses.baseClass}-${size}`
+  }`;
 
   const [isModalVisible, setModalVisibility] = useState(false);
 
@@ -39,7 +46,7 @@ const Button = ({
     <>
       <button
         type={isSubmit ? "submit" : "button"}
-        className={`${buttonClass} m-4`}
+        className={`${buttonClass} ${!noSpacing && "m-4"}`}
         disabled={disable}
         onClick={handleOnClick}
       >
