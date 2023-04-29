@@ -8,11 +8,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "./Button/Button";
 import Dropdown from "./Dropdown/Dropdown";
-import FormDropDown from "../../../types/form/formDropdown";
 import FormDropdown from "../../../types/form/formDropdown";
 import FormDropdownItem from "../../../types/form/formDropdownItem";
 
-const Form = ({ inputs, button, onSubmit, validator }: FormModel) => {
+const Form = ({
+  heading,
+  inputs,
+  button,
+  onSubmit,
+  validator,
+  noSpacing,
+}: FormModel) => {
   const {
     register,
     handleSubmit,
@@ -56,62 +62,75 @@ const Form = ({ inputs, button, onSubmit, validator }: FormModel) => {
   };
 
   return (
-    <form
-      className='card border-0 bg-body p-3'
-      onSubmit={handleSubmit(submitHandler)}
+    <div
+      className={`${
+        noSpacing ? "m-0" : "m-5"
+      } shadow-lg p-3 bg-body mb-5 rounded`}
     >
-      {inputs.map((i, index) =>
-        "items" in i ? (
-          <Dropdown
-            key={index}
-            name={i.name}
-            label={i.label}
-            text={i.text}
-            items={i.items}
-            value={values[index]}
-            color={i.color}
-            isRequired={validator && !validator?.shape[i.name].isOptional()}
-            isDisabled={i.isDisabled}
-            isOutlined={i.containsOutline}
-            isAutoClosed={i.isAutoClosed}
-            isReferenced={i.hasReference}
-            error={errors[i.name]?.message as string | undefined}
-            trigger={trigger}
-            setValue={setValue}
-            doRegister={register}
-            onSelect={(item: FormDropdownItem) => handleSelect(item, i, index)}
-          />
-        ) : (
-          <Input
-            key={index}
-            label={i.label}
-            name={i.name}
-            type={i.type}
-            value={values[index]}
-            placeholder={i.text}
-            isRequired={validator && !validator?.shape[i.name].isOptional()}
-            isDisable={i.isDisabled}
-            showCheck={i.containsValidCheck}
-            onChange={(e) => handleInputChange(e, i, index)}
-            doRegister={register}
-            error={errors[i.name]?.message as string | undefined}
-          />
-        )
+      {heading && (
+        <h6 className='display-6 lead text-center text-capitalize pb-4'>
+          {heading}
+        </h6>
       )}
+      <form
+        className='card border-0 bg-body p-3'
+        onSubmit={handleSubmit(submitHandler)}
+      >
+        {inputs.map((i, index) =>
+          "items" in i ? (
+            <Dropdown
+              key={index}
+              name={i.name}
+              label={i.label}
+              text={i.text}
+              items={i.items}
+              value={values[index]}
+              color={i.color}
+              isRequired={validator && !validator?.shape[i.name].isOptional()}
+              isDisabled={i.isDisabled}
+              isOutlined={i.containsOutline}
+              isAutoClosed={i.isAutoClosed}
+              isReferenced={i.hasReference}
+              error={errors[i.name]?.message as string | undefined}
+              trigger={trigger}
+              setValue={setValue}
+              doRegister={register}
+              onSelect={(item: FormDropdownItem) =>
+                handleSelect(item, i, index)
+              }
+            />
+          ) : (
+            <Input
+              key={index}
+              label={i.label}
+              name={i.name}
+              type={i.type}
+              value={values[index]}
+              placeholder={i.text}
+              isRequired={validator && !validator?.shape[i.name].isOptional()}
+              isDisable={i.isDisabled}
+              showCheck={i.containsValidCheck}
+              onChange={(e) => handleInputChange(e, i, index)}
+              doRegister={register}
+              error={errors[i.name]?.message as string | undefined}
+            />
+          )
+        )}
 
-      {button && (
-        <Button
-          text={button.text}
-          color={button.color}
-          containsOutline={button.isOutlined}
-          disable={!isValid}
-          isSubmit={button.canSubmit && isValid}
-          onClick={button.onClick}
-        >
-          {button.children}
-        </Button>
-      )}
-    </form>
+        {button && (
+          <Button
+            text={button.text}
+            color={button.color}
+            containsOutline={button.isOutlined}
+            disable={!isValid}
+            isSubmit={button.canSubmit && isValid}
+            onClick={button.onClick}
+          >
+            {button.children}
+          </Button>
+        )}
+      </form>
+    </div>
   );
 };
 
