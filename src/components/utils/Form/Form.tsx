@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import FormInputModel from "../../../types/form/formInput";
 import FormButtonModel from "../../../types/form/formButton";
 import styles from "../Form/Form.module.css";
@@ -34,6 +34,8 @@ const Form = ({
   });
 
   const [values, setValues] = useState(inputs.map((i) => i.value));
+
+  useEffect(() => setValues(inputs.map((i) => i.value)), inputs);
 
   const handleInputChange = (
     event: any,

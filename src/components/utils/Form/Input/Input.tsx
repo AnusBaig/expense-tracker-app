@@ -61,7 +61,7 @@ function Input({
           placeholder={placeholder}
           className='form-control'
         />
-        {showCheck && !error && (
+        {showCheck && !error && value && (
           <span className={styles["checkValidity"]}>
             <i className='fa-solid fa-check text-success'></i>
           </span>
