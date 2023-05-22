@@ -10,6 +10,8 @@ import TableColumnItem from "../types/table/tableColumnItem";
 import TableHeadItem from "../types/table/tableHeadItem";
 import _ from "lodash";
 import { Actions } from "../enums/actions";
+import Dropdown from "./utils/Form/Dropdown/Dropdown";
+import { Selections } from "../enums/selections";
 
 const ExpenseGenerator = () => {
   const inputValidator = z.object({
@@ -22,6 +24,9 @@ const ExpenseGenerator = () => {
 
   const [expenses, setExpenses] = useState<FormDataType[]>([]);
   const [selectedExpense, setSelectedExpense] = useState<FormDataType>();
+  const [selectedCategory, setSelectedCategory] = useState(
+    Selections.ALL.toString()
+  );
   const [action, setAction] = useState(Actions.ADD);
 
   const categoryItems: FormDropdownItem[] = [
@@ -157,12 +162,41 @@ const ExpenseGenerator = () => {
     }
   };
 
+  const handleSelectCategory = (item: FormDropdownItem) => {
+    if (!item.value) {
+      setSelectedCategory(Selections.ALL);
+      return;
+    }
+
+    setSelectedCategory(item.value);
+  };
+
+  const getExpensesByCategory = (category?: string): FormDataType[] => {
+    let selectedExpenses: FormDataType[] = [];
+
+    if (!category) {
+      return expenses;
+    }
+
+    if (category == Selections.ALL) {
+      return expenses;
+    }
+
+    if (expenses) {
+      expenses.forEach((e) =>
+        e.category == category ? selectedExpenses.push(e) : null
+      );
+    }
+    return selectedExpenses;
+  };
+
   const getListItems = (): Array<TableColumnItem[]> => {
     let rowItems: Array<TableColumnItem[]> = [];
+    let items = getExpensesByCategory(selectedCategory);
 
-    if (!expenses) return rowItems;
+    if (!items) return rowItems;
 
-    for (const item of expenses) {
+    for (const item of items) {
       rowItems.push([
         {
           text: item.description,
@@ -188,6 +222,26 @@ const ExpenseGenerator = () => {
     return rowItems;
   };
 
+  const getCategoryItems = (): FormDropdownItem[] => {
+    let items: FormDropdownItem[] = [
+      {
+        text: "All Categories",
+        value: Selections.ALL,
+      },
+    ];
+
+    if (expenses) {
+      expenses.forEach((e) => {
+        var formItems = categoryItems.filter((i) => i.value == e.category);
+        !items.some((i) => i.value == e.category) && formItems.length > 0
+          ? items.push(formItems[0])
+          : null;
+      });
+    }
+
+    return items;
+  };
+
   return (
     <>
       {(action && action == Actions.NO_ACTION) || (
@@ -199,6 +253,15 @@ const ExpenseGenerator = () => {
           onSubmit={handleSubmit}
         />
       )}
+
+      <Dropdown
+        name='category-selector'
+        text='All Categories'
+        color='secondary'
+        value={selectedExpense?.category}
+        items={getCategoryItems()}
+        onSelect={handleSelectCategory}
+      />
 
       <Table
         heading='Monthly Expenses'

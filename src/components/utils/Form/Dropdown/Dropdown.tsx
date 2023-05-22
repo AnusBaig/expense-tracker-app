@@ -7,7 +7,7 @@ import FormDropdownItem from "../../../../types/form/formDropdownItem";
 
 interface Props {
   name: string;
-  label: string;
+  label?: string;
   text: string;
   items: FormDropdownItemModel[];
   value?: string;
@@ -18,9 +18,9 @@ interface Props {
   isOutlined?: boolean;
   isReferenced?: boolean;
   isAutoClosed?: boolean;
-  doRegister: UseFormRegister<any>;
-  trigger: (name: string | string[]) => Promise<boolean>;
-  setValue: (name: string, value: unknown, config?: Object) => void;
+  doRegister?: UseFormRegister<any>;
+  trigger?: (name: string | string[]) => Promise<boolean>;
+  setValue?: (name: string, value: unknown, config?: Object) => void;
   onSelect: (item: FormDropdownItemModel) => void;
 }
 
@@ -49,26 +49,31 @@ const Dropdown = ({
     [value]
   );
 
-  useEffect(() => setValue(name, selectedItem?.value), [selectedItem]);
+  useEffect(
+    () => setValue && setValue(name, selectedItem?.value),
+    [selectedItem]
+  );
 
   const handleSelected = (item: FormDropdownItemModel) => {
     setSelectedItem(item);
-    setValue(name, item.value, { shouldValidate: true });
+    setValue && setValue(name, item.value, { shouldValidate: true });
     onSelect(item);
   };
 
-  const handleClick = async () => await trigger(name);
+  const handleClick = async () => trigger && (await trigger(name));
 
   return (
     <div className='mb-3'>
       <div className='d-flex align-middle'>
-        <label
-          htmlFor={name}
-          className={["form-label", "d-flex", styles["title"]].join(" ")}
-        >
-          {label}
-          {isRequired && <span className='ps-2 text-danger'>*</span>}
-        </label>
+        {label && (
+          <label
+            htmlFor={name}
+            className={["form-label", "d-flex", styles["title"]].join(" ")}
+          >
+            {label}
+            {isRequired && <span className='ps-2 text-danger'>*</span>}
+          </label>
+        )}
         <div className='btn-group w-100'>
           <button
             id={name}
@@ -86,7 +91,7 @@ const Dropdown = ({
             {selectedItem?.text || text}
           </button>
           <select
-            {...doRegister(name)}
+            {...((doRegister && doRegister(name)) ?? [])}
             name={name}
             aria-label={label}
             value={selectedItem?.value}
