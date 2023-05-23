@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children, ReactNode } from "react";
 import styles from "./Table.module.css";
 import TableHeadItem from "../../../types/table/tableHeadItem";
 import TableColumnItem from "../../../types/table/tableColumnItem";
@@ -8,11 +8,21 @@ interface Props {
   cols: TableHeadItem[];
   rows: Array<TableColumnItem[]>;
   heading?: string;
+  noDataMessage?: string;
   isBordered?: boolean;
   noSpacing?: boolean;
+  children?: ReactNode[];
 }
 
-const Table = ({ cols, rows, heading, isBordered, noSpacing }: Props) => {
+const Table = ({
+  cols,
+  rows,
+  heading,
+  noDataMessage,
+  isBordered,
+  noSpacing,
+  children,
+}: Props) => {
   const getColumnClass = (c: TableHeadItem) =>
     `${c.bold ? "fw-bold" : "fw-normal"} ${
       c.color ? `text-${c.color}` : "text-reset"
@@ -23,15 +33,21 @@ const Table = ({ cols, rows, heading, isBordered, noSpacing }: Props) => {
     item.onClick && item.onClick();
   };
 
+  const noDataText =
+    "Oops! It seems like this table is currently empty. Nothing to display";
+
   return (
     <>
-      {rows.length > 0 && (
-        <div className={noSpacing ? "m-0" : "m-3"}>
-          {heading && (
-            <h6 className='display-5 fw-bold text-capitalize text-center pb-3'>
-              {heading}
-            </h6>
-          )}
+      <div className={noSpacing ? "m-0" : "m-3"}>
+        {heading && (
+          <h6 className='display-5 fw-bold text-capitalize text-center pb-3'>
+            {heading}
+          </h6>
+        )}
+        {children && children.map((c) => c && c)}
+        {rows.length == 0 ? (
+          <p className='lead'>{noDataMessage || noDataText}</p>
+        ) : (
           <table
             className={`table table-hover ${isBordered && "table-bordered"}`}
           >
@@ -76,8 +92,8 @@ const Table = ({ cols, rows, heading, isBordered, noSpacing }: Props) => {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };

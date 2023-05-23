@@ -254,20 +254,22 @@ const ExpenseGenerator = () => {
         />
       )}
 
-      <Dropdown
-        name='category-selector'
-        text='All Categories'
-        color='secondary'
-        value={selectedExpense?.category}
-        items={getCategoryItems()}
-        onSelect={handleSelectCategory}
-      />
-
       <Table
         heading='Monthly Expenses'
         cols={tableHeader}
         rows={getListItems()}
-      />
+        noDataMessage='You have no expenses to show for selected category'
+      >
+        <Dropdown
+          name='category-selector'
+          text='All Categories'
+          color='secondary'
+          value={selectedExpense?.category}
+          items={getCategoryItems()}
+          onSelect={handleSelectCategory}
+        />
+        <></>
+      </Table>
     </>
   );
 };
